@@ -1,26 +1,38 @@
 //You can edit ALL of the code here
-function setup() {
-  const allEpisodes = getAllEpisodes();
+async function setup() {
+  const allEpisodes = await fetch("https://api.tvmaze.com/shows/82/episodes")
+    .then((response) => response.json())
+    .catch((error) => {
+      document.body.innerHTML = `<p style="color: red;">Error fetching episodes: ${error.message}</p>`;
+      return [];
+    })
+    .then((data) => {
+      if (!Array.isArray(data)) {
+        document.body.innerHTML = `<p style="color: red;">Unexpected data format: ${JSON.stringify(data)}</p>`;
+        return [];
+      }
+      return data;
+    });
   makePageForEpisodes(allEpisodes);
 }
 
 function makePageForEpisodes(episodeList) {
-const search = document.createElement("div");
-document.body.appendChild(search);
-const searchInput = document.createElement("input");
-search.appendChild(searchInput);
-searchInput.placeholder = "Search episodes...";
-const searchCount = document.createElement("span");
-search.appendChild(searchCount);
-searchCount.textContent = `Displaying ${episodeList.length} / ${episodeList.length} episodes`;
-searchCount.style.marginLeft = "10px";
+  const search = document.createElement("div");
+  document.body.appendChild(search);
+  const searchInput = document.createElement("input");
+  search.appendChild(searchInput);
+  searchInput.placeholder = "Search episodes...";
+  const searchCount = document.createElement("span");
+  search.appendChild(searchCount);
+  searchCount.textContent = `Displaying ${episodeList.length} / ${episodeList.length} episodes`;
+  searchCount.style.marginLeft = "10px";
 
   const rootElem = document.createElement("div");
   document.body.appendChild(rootElem);
   const copyWrite = document.createElement("div");
   document.body.appendChild(copyWrite);
   copyWrite.innerHTML = `<p>All data is from <a href="https://www.tvmaze.com/" target="_blank">TVmaze.com</a></p>`;
-    
+
   episodeList.forEach((episode) => {
     const episodeElem = document.createElement("div");
     episodeElem.style.border = "1px solid black";
@@ -53,12 +65,14 @@ searchCount.style.marginLeft = "10px";
       } else {
         episodeElem.style.display = "none";
       }
-      const visibleEpisodes = document.querySelectorAll(".episode:not([style*='display: none'])");
+      const visibleEpisodes = document.querySelectorAll(
+        ".episode:not([style*='display: none'])",
+      );
       searchCount.textContent = `Displaying ${visibleEpisodes.length} / ${episodeList.length} episodes`;
     });
   });
 
- const dropdown = document.createElement("select");
+  const dropdown = document.createElement("select");
   search.appendChild(dropdown);
   dropdown.style.marginLeft = "10px";
   dropdown.style.border = "1px solid blue";
@@ -81,21 +95,21 @@ searchCount.style.marginLeft = "10px";
     const episodeElems = document.querySelectorAll(".episode");
     episodeElems.forEach((elem) => {
       if (selectedEpisodeId === "") {
-          elem.style.display = "block";
-        }
-     else  if (elem.querySelector("h2").textContent === episodeList.find(ep => ep.id == selectedEpisodeId).name) {
         elem.style.display = "block";
-      
-      }
-       else {
+      } else if (
+        elem.querySelector("h2").textContent ===
+        episodeList.find((ep) => ep.id == selectedEpisodeId).name
+      ) {
+        elem.style.display = "block";
+      } else {
         elem.style.display = "none";
       }
-        const visibleEpisodes = document.querySelectorAll(".episode:not([style*='display: none'])");
-        searchCount.textContent = `Displaying ${visibleEpisodes.length} / ${episodeList.length} episodes`;
+      const visibleEpisodes = document.querySelectorAll(
+        ".episode:not([style*='display: none'])",
+      );
+      searchCount.textContent = `Displaying ${visibleEpisodes.length} / ${episodeList.length} episodes`;
     });
-     });
-     
+  });
 }
-
 
 window.onload = setup;
