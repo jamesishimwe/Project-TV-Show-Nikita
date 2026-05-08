@@ -1,5 +1,18 @@
 //You can edit ALL of the code here
 async function setup() {
+  const allShows = await fetch("https://api.tvmaze.com/shows")
+    .then((response) => response.json())
+    .catch((error) => {
+      document.body.innerHTML = `<p style="color: red;">Error fetching shows: ${error.message}</p>`;
+      return [];
+    })
+    .then((data) => {
+      if (!Array.isArray(data)) {
+        document.body.innerHTML = `<p style="color: red;">Unexpected data format: ${JSON.stringify(data)}</p>`;
+        return [];
+      }
+      return data;
+    });
   const allEpisodes = await fetch("https://api.tvmaze.com/shows/82/episodes")
     .then((response) => response.json())
     .catch((error) => {
