@@ -19,6 +19,15 @@ async function setup() {
 function makePageForEpisodes(episodeList) {
   const search = document.createElement("div");
   document.body.appendChild(search);
+  search.style.backgroundColor = "rgb(37, 102, 140)";
+  search.style.padding = "40px";
+  const dropDownShow = document.createElement("select");
+  search.appendChild(dropDownShow);
+  const defaultOptionShow = document.createElement("option");
+  defaultOptionShow.value = "";
+  defaultOptionShow.textContent = "Select a show";
+  dropDownShow.appendChild(defaultOptionShow);
+  dropDownShow.style.marginRight = "10px";
   const searchInput = document.createElement("input");
   search.appendChild(searchInput);
   searchInput.placeholder = "Search episodes...";
