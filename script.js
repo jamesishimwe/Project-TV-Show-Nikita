@@ -58,7 +58,44 @@ searchCount.style.marginLeft = "10px";
     });
   });
 
- 
+ const dropdown = document.createElement("select");
+  search.appendChild(dropdown);
+  dropdown.style.marginLeft = "10px";
+  dropdown.style.border = "1px solid blue";
+  dropdown.style.color = "white";
+  dropdown.style.backgroundColor = "rgb(37, 102, 140)";
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  defaultOption.textContent = "Select an episode";
+  dropdown.appendChild(defaultOption);
+
+  episodeList.forEach((episode) => {
+    const option = document.createElement("option");
+    option.value = episode.id;
+    option.textContent = `S${episode.season}E${episode.number} - ${episode.name}`;
+    dropdown.appendChild(option);
+  });
+
+  dropdown.addEventListener("change", (event) => {
+    const selectedEpisodeId = event.target.value;
+    const episodeElems = document.querySelectorAll(".episode");
+    episodeElems.forEach((elem) => {
+      if (selectedEpisodeId === "") {
+          elem.style.display = "block";
+        }
+     else  if (elem.querySelector("h2").textContent === episodeList.find(ep => ep.id == selectedEpisodeId).name) {
+        elem.style.display = "block";
+      
+      }
+       else {
+        elem.style.display = "none";
+      }
+        const visibleEpisodes = document.querySelectorAll(".episode:not([style*='display: none'])");
+        searchCount.textContent = `Displaying ${visibleEpisodes.length} / ${episodeList.length} episodes`;
+    });
+     });
+     
 }
+
 
 window.onload = setup;
