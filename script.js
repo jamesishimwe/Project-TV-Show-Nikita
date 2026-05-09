@@ -13,20 +13,15 @@ async function setup() {
       }
       return data;
     });
-  const allEpisodes = await fetch("https://api.tvmaze.com/shows/82/episodes")
-    .then((response) => response.json())
-    .catch((error) => {
-      document.body.innerHTML = `<p style="color: red;">Error fetching episodes: ${error.message}</p>`;
-      return [];
-    })
-    .then((data) => {
-      if (!Array.isArray(data)) {
-        document.body.innerHTML = `<p style="color: red;">Unexpected data format: ${JSON.stringify(data)}</p>`;
-        return [];
-      }
-      return data;
-    });
-  makePageForEpisodes(allEpisodes);
+  if (!Array.isArray(allShows)) {
+    document.body.innerHTML = `
+      <p style="color:red;">
+        Unexpected data format
+      </p>
+    `;
+    return;
+  }
+ 
 }
 
 function makePageForEpisodes(episodeList) {
